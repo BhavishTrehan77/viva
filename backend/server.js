@@ -46,6 +46,7 @@ mongoose.connect(mongoURI)
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/files', require('./routes/files'));
 app.use('/api/ai', require('./routes/ai'));
+app.use('/api/sql', require('./routes/sqlDemo'));
 
 // Fallback route for 404
 app.use((req, res) => {

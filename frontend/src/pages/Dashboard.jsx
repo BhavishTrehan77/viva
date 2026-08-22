@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import { Upload, FileText, LogOut, Shield, Trash2, Code, Share2 } from 'lucide-react';
+import { Upload, FileText, LogOut, Shield, Trash2, Code, Share2, Database } from 'lucide-react';
 import { io } from 'socket.io-client';
 
 export default function Dashboard() {
@@ -142,9 +142,15 @@ export default function Dashboard() {
             {user?.role.toUpperCase()}
           </span>
         </div>
-        <div style={{ display: 'flex', gap: '1rem' }}>
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
           <Link to="/hoisting-demo" className="btn outline">
-            <Code size={16} /> View Hoisting Demo
+            <Code size={16} /> Hoisting
+          </Link>
+          <Link to="/promises-vs-callbacks" className="btn outline">
+            <Code size={16} /> Promises vs Callbacks
+          </Link>
+          <Link to="/sql-joins" className="btn outline">
+            <Database size={16} /> SQL JOINs
           </Link>
           <button onClick={logout} className="btn outline">
             <LogOut size={16} /> Logout
