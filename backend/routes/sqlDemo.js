@@ -150,6 +150,28 @@ function simulateJoin(joinType) {
 }
 
 // Endpoint to run SQL Join queries (PostgreSQL standard queries)
+
+/*
+ * PERFORMANCE NOTE:
+ * The JOIN relationship is users.id = files.user_id. For a production
+ * PostgreSQL database, files.user_id should be indexed because it is the
+ * foreign-key/JOIN lookup column. This demo intentionally does not create
+ * the index automatically so that the SQL example remains non-destructive.
+ *
+ * Example production migration:
+ *   CREATE INDEX idx_files_user_id ON files(user_id);
+ *
+ * Query-plan verification:
+ *   EXPLAIN ANALYZE
+ *   SELECT users.id, users.name, files.id, files.originalname, files.size
+ *   FROM users
+ *   INNER JOIN files ON users.id = files.user_id;
+ *
+ * The live demo already avoids SELECT * and uses a PostgreSQL connection
+ * pool. The mock fallback uses nested loops and is suitable only for the
+ * small demonstration dataset, not large production datasets.
+ */
+
 router.get('/joins', async (req, res) => {
   const joinType = (req.query.type || 'inner').toLowerCase();
   

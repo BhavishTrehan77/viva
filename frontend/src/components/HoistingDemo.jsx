@@ -100,3 +100,15 @@ export default function HoistingDemo() {
     </div>
   );
 }
+
+
+// Explicit const hoisting / Temporal Dead Zone demonstration.
+const constHoistingDemo = new Function(`
+  try {
+    console.log(myConst);
+    const myConst = 'Test';
+    return 'No error';
+  } catch (e) {
+    return e.toString();
+  }
+`);
