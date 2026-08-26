@@ -32,32 +32,44 @@ export default function HoistingDemo() {
       return 'Hi there!';
     }
 
-    // 3. let/const Hoisting (Temporal Dead Zone)
-    try {
-      // We can't actually run this safely without crashing the app unless we use eval or new Function,
-      // because React/Vite's bundler will often throw early. Let's simulate it safely or catch it.
-      // Actually, if we just reference an undeclared variable it throws.
-      // Let's use a dynamic approach to intentionally trigger the TDZ
-      const tdzDemo = new Function(`
-        try {
-          return myLet;
-          let myLet = 'Test';
-        } catch(e) {
-          return e.toString();
-        }
-      `);
+    // 3. let Hoisting - Temporal Dead Zone (TDZ)
+    const letTdzDemo = new Function(`
+      try {
+        return myLet;
+        let myLet = 'Test';
+      } catch (e) {
+        return e.toString();
+      }
+    `);
 
-      logs.push({
-        type: 'let',
-        title: 'Temporal Dead Zone (let/const)',
-        code: `console.log(myLet);\nlet myLet = 'Test';`,
-        result: tdzDemo(),
-        status: 'error',
-        explanation: 'Variables declared with let and const are hoisted but NOT initialized. Accessing them before declaration results in a ReferenceError due to the Temporal Dead Zone (TDZ).'
-      });
-    } catch (err) {
-       // fallback if new Function fails
-    }
+    logs.push({
+      type: 'let',
+      title: 'Temporal Dead Zone (let)',
+      code: `console.log(myLet);\\nlet myLet = 'Test';`,
+      result: letTdzDemo(),
+      status: 'error',
+      explanation: 'let is hoisted as a lexical binding but remains uninitialized in the Temporal Dead Zone. Accessing it before its declaration throws a ReferenceError.'
+    });
+
+    // 4. const Hoisting - Temporal Dead Zone (TDZ)
+    const constTdzDemo = new Function(`
+      try {
+        console.log(myConst);
+        const myConst = 'Test';
+        return 'No error';
+      } catch (e) {
+        return e.toString();
+      }
+    `);
+
+    logs.push({
+      type: 'const',
+      title: 'Temporal Dead Zone (const)',
+      code: `console.log(myConst);\\nconst myConst = 'Test';`,
+      result: constTdzDemo(),
+      status: 'error',
+      explanation: 'const is hoisted as a lexical binding but remains uninitialized in the Temporal Dead Zone. Accessing it before its declaration throws a ReferenceError. const must also be initialized at declaration and cannot be reassigned.'
+    });
 
     setResults(logs);
   };
@@ -101,14 +113,3 @@ export default function HoistingDemo() {
   );
 }
 
-
-// Explicit const hoisting / Temporal Dead Zone demonstration.
-const constHoistingDemo = new Function(`
-  try {
-    console.log(myConst);
-    const myConst = 'Test';
-    return 'No error';
-  } catch (e) {
-    return e.toString();
-  }
-`);
